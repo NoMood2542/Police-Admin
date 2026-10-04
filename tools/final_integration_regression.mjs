@@ -82,10 +82,11 @@ check(target && target.count >= 12, 'Found mastery topic pool >= 12', target ? t
 E(`(()=>{
   const t=${JSON.stringify(target)}, u=adaptiveQuestionUniverse().filter(c=>c.subject===t.subject&&c.topic===t.topic);
   const seed={name:'Seed Weakness',type:'section',id:'seed'};
-  const q0=u[0].q, wrong=Object.keys(q0.options).find(x=>x!==q0.answer);
+  const q0={...u[0].q,subject:t.subject,topic:t.topic}, q1={...u[1].q,subject:t.subject,topic:t.topic};
+  const wrong=Object.keys(q0.options).find(x=>x!==q0.answer);
   registerLearningAttempt(seed,q0,wrong,95000);
   registerLearningAttempt(seed,q0,wrong,96000);
-  registerLearningAttempt(seed,u[1].q,Object.keys(u[1].q.options).find(x=>x!==u[1].q.answer),94000);
+  registerLearningAttempt(seed,q1,Object.keys(q1.options).find(x=>x!==q1.answer),94000);
   refreshMasteryBaselines();
 })()`);
 let mstage = E(`state.learning.mastery[topicKey(${JSON.stringify(target.subject)},${JSON.stringify(target.topic)})]?.stage`);
