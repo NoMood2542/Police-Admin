@@ -94,7 +94,7 @@ check(mstage === 'repair', 'Repeated weakness creates Repair baseline', String(m
 E(`(()=>{
   const t=${JSON.stringify(target)}, u=adaptiveQuestionUniverse().filter(c=>c.subject===t.subject&&c.topic===t.topic);
   const d={name:'Adaptive Weakness Drill',type:'adaptive',id:'adaptive-drill'};
-  for(let i=2;i<6;i++) registerLearningAttempt(d,u[i].q,u[i].q.answer,20000+i);
+  for(let i=2;i<6;i++){const q={...u[i].q,subject:t.subject,topic:t.topic};registerLearningAttempt(d,q,q.answer,20000+i)}
   refreshMasteryBaselines();
 })()`);
 mstage = E(`state.learning.mastery[topicKey(${JSON.stringify(target.subject)},${JSON.stringify(target.topic)})]?.stage`);
