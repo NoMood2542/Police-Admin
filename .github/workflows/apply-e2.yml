@@ -1,0 +1,30 @@
+name: Apply E2 explanation overhaul
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/apply_e2.py"
+      - ".github/workflows/apply-e2.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply E2 patch
+        run: python tools/apply_e2.py
+      - name: Commit updated study app
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No index.html changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Apply explanation overhaul E2 (UX v7.2)"
+          git push
