@@ -1,0 +1,33 @@
+name: Final Integration Regression
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/final_integration_regression.mjs"
+      - ".github/workflows/final-regression.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  final-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install jsdom
+        run: npm install --no-save jsdom@26
+      - name: Run final integration regression
+        run: node tools/final_integration_regression.mjs | tee final-integration.log
+      - name: Upload regression log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-integration-regression-log
+          path: final-integration.log
